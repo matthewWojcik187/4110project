@@ -88,6 +88,14 @@ followers = db.Table(
     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
 )
 
+class Archive(db.Model):
+    
+    iddsdd = db.Column(db.Integer, primary_key=True)
+    userId = db.Column(db.Integer)
+    postIdA = db.Column(db.Integer)
+
+    def __repr__(self):
+        return '<Archived {}>'.format(self.body)
 
 class User(UserMixin, PaginatedAPIMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -114,6 +122,9 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
     notifications = db.relationship('Notification', backref='user',
                                     lazy='dynamic')
     tasks = db.relationship('Task', backref='user', lazy='dynamic')
+
+    favposts = db.relationship('Post')
+
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -250,6 +261,9 @@ class Post(SearchableMixin, db.Model):
 
     def __repr__(self):
         return '<Post {}>'.format(self.body)
+    
+    def getpost(id):
+        
 
 
 class Message(db.Model):

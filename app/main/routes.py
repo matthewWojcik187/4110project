@@ -7,10 +7,9 @@ from langdetect import detect, LangDetectException
 from app import db
 from app.main.forms import EditProfileForm, EmptyForm, PostForm, SearchForm, \
     MessageForm
-from app.models import User, Post, Message, Notification
+from app.models import User, Post, Message, Notification, Archive
 from app.translate import translate
 from app.main import bp
-
 
 @bp.before_app_request
 def before_request():
@@ -230,3 +229,89 @@ def notifications():
         'data': n.get_data(),
         'timestamp': n.timestamp
     } for n in notifications])
+
+
+@bp.route('/archivedposts')
+@login_required
+def archived_posts():
+
+   return render_template('archived.html')
+
+
+
+
+
+@bp.route('/archive/<postid>')
+@login_required
+def archive_post(Post postid):
+
+
+
+    flash(_('%(postid)s',postid=postid))
+    #flash(_('%(postid)s',postid=current_user.id))
+
+    current_user.favposts.append(postid)
+
+    # stinky = Archive()
+    # userId=current_user.id,postIdA=michaelstupid
+    # db.session.add(stinky)
+    # db.session.commit()
+
+    return redirect(url_for('main.user', username=current_user.username))
+
+
+# @bp.route('/register', methods=['GET', 'POST'])
+# def register():
+#     if current_user.is_authenticated:
+#         return redirect(url_for('main.index'))
+#     form = RegistrationForm()
+#     if form.validate_on_submit():
+#         user = User(username=form.username.data, email=form.email.data)
+#         user.set_password(form.password.data)
+#         db.session.add(user)
+#         db.session.commit()
+#         flash(_('Congratulations, you are now a registered user!'))
+#         return redirect(url_for('auth.login'))
+#     return render_template('auth/register.html', title=_('Register'),
+#                            form=form)
+
+
+
+# @bp.route('/follow/<username>', methods=['POST'])
+# @login_required
+# def follow(username):
+#     form = EmptyForm()
+#     if form.validate_on_submit():
+#         user = User.query.filter_by(username=username).first()
+#         if user is None:
+#             flash(_('User %(username)s not found.', username=username))
+#             return redirect(url_for('main.index'))
+#         if user == current_user:
+#             flash(_('You cannot follow yourself!'))
+#             return redirect(url_for('main.user', username=username))
+#         current_user.follow(user)
+#         db.session.commit()
+#         flash(_('You are following %(username)s!', username=username))
+#         return redirect(url_for('main.user', username=username))
+#     else:
+#         return redirect(url_for('main.index'))
+
+
+# @bp.route('/unfollow/<username>', methods=['POST'])
+# @login_required
+# def unfollow(username):
+#     form = EmptyForm()
+#     if form.validate_on_submit():
+#         user = User.query.filter_by(username=username).first()
+#         if user is None:
+#             flash(_('User %(username)s not found.', username=username))
+#             return redirect(url_for('main.index'))
+#         if user == current_user:
+#             flash(_('You cannot unfollow yourself!'))
+#             return redirect(url_for('main.user', username=username))
+#         current_user.unfollow(user)
+#         db.session.commit()
+#         flash(_('You are not following %(username)s.', username=username))
+#         return redirect(url_for('main.user', username=username))
+#     else:
+#         return redirect(url_for('main.index'))

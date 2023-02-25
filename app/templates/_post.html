@@ -25,8 +25,18 @@
                                 '#translation{{ post.id }}',
                                 '{{ post.language }}',
                                 '{{ g.locale }}');">{{ _('Translate') }}</a>
+
+                  
                 </span>
                 {% endif %}
+
+                <p><a href="{{ url_for('main.archive_post', postid=post) }}">
+                    {{ _('Archive Post') }}</a></p>
+
+   
+
+            
+                
             </td>
         </tr>
     </table>

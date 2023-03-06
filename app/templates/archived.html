@@ -2,9 +2,10 @@
 
 {% block app_content %}
     <h1>{{ _('Archived Posts') }}</h1>
-    {% for post in messages %}
+    {% for post in archived %}
         {% include '_post.html' %}
     {% endfor %}
+    <!--
     <nav aria-label="...">
         <ul class="pager">
             <li class="previous{% if not prev_url %} disabled{% endif %}">
@@ -19,5 +20,5 @@
             </li>
         </ul>
     </nav>
-    
+    -->
 {% endblock %}

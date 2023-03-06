@@ -25,18 +25,21 @@
                                 '#translation{{ post.id }}',
                                 '{{ post.language }}',
                                 '{{ g.locale }}');">{{ _('Translate') }}</a>
-
-                  
                 </span>
                 {% endif %}
 
-                <p><a href="{{ url_for('main.archive_post', postid=post) }}">
+                <!-- Check if a post is archived already. 
+                    If it is then we put an unarchive link,
+                    otherwise we put an archive link
+                -->
+                {% if current_user.isArchived(post.id) %}
+                    <p><a href="{{ url_for('main.unarchive_post', postid=post.id) }}">
+                    {{ _('Unarchive Post') }}</a></p>
+                {% else %}
+                    <p><a href="{{ url_for('main.archive_post', postid=post.id) }}">
                     {{ _('Archive Post') }}</a></p>
+                {% endif %}
 
-   
-
-            
-                
             </td>
         </tr>
     </table>

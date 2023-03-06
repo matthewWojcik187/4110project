@@ -88,14 +88,11 @@ followers = db.Table(
     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
 )
 
-class Archive(db.Model):
-    
-    iddsdd = db.Column(db.Integer, primary_key=True)
-    userId = db.Column(db.Integer)
-    postIdA = db.Column(db.Integer)
-
-    def __repr__(self):
-        return '<Archived {}>'.format(self.body)
+archivedPosts = db.Table(
+    'archivedPosts',
+    db.Column('userId', db.Integer, db.ForeignKey('user.id')),
+    db.Column('postId', db.Integer, db.ForeignKey('post.id'))
+)
 
 class User(UserMixin, PaginatedAPIMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -107,6 +104,10 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     token = db.Column(db.String(32), index=True, unique=True)
     token_expiration = db.Column(db.DateTime)
+
+    # Table relationship for archived posts
+    archivedPostsUser = db.relationship('Post', secondary=archivedPosts, backref=db.backref('archivedPosts', lazy='dynamic'), lazy='dynamic')
+
     followed = db.relationship(
         'User', secondary=followers,
         primaryjoin=(followers.c.follower_id == id),
@@ -122,9 +123,6 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
     notifications = db.relationship('Notification', backref='user',
                                     lazy='dynamic')
     tasks = db.relationship('Task', backref='user', lazy='dynamic')
-
-    favposts = db.relationship('Post')
-
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -151,6 +149,21 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
     def is_following(self, user):
         return self.followed.filter(
             followers.c.followed_id == user.id).count() > 0
+
+
+    # Archive post
+    def archive(self, post):
+        self.archivedPostsUser.append(post)
+
+    # Unarchive post
+    def unarchive(self, post):
+        self.archivedPostsUser.remove(post)
+
+    # Check if a post is archived
+    def isArchived(self, postid):
+        posted=Post.getPost(int(postid))
+        return self.archivedPostsUser.filter(archivedPosts.c.postId == posted.id).count() > 0
+
 
     def followed_posts(self):
         followed = Post.query.join(
@@ -262,8 +275,15 @@ class Post(SearchableMixin, db.Model):
     def __repr__(self):
         return '<Post {}>'.format(self.body)
     
-    def getpost(id):
-        
+    def getPost(postid):
+
+        items = Post.query.all()
+
+        for item in items:
+            if item.id == postid:
+                return item
+
+        return False
 
 
 class Message(db.Model):

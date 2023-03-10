@@ -23,6 +23,7 @@ class EditProfileForm(FlaskForm):
     username = StringField(_l('Username'), validators=[DataRequired(), no_angle_brackets, no_spaces, Length(min=0, max=100)])
     about_me = TextAreaField(_l('About me'),
                              validators=[Length(min=0, max=140)])
+    profilePicture = StringField(_l('Post the link below (submit as empty for default image)'))
     submit = SubmitField(_l('Submit'))
 
     def __init__(self, original_username, *args, **kwargs):

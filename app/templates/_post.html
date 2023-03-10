@@ -2,7 +2,16 @@
         <tr>
             <td width="70px">
                 <a href="{{ url_for('main.user', username=post.author.username) }}">
-                    <img src="{{ post.author.avatar(70) }}" />
+            
+                    <!-- Check if the profilePicture database column has text in it
+                    If it does then we use the link for the profile picture
+                    Else, we will use the function that generate the user profile picture from the email -->
+                    {% if post.author.profilePicture %}
+                        <img style="width: 70px; height: 70px;" src="{{ post.author.profilePicture }}">
+                    {% else %}
+                        <img src="{{ post.author.avatar(70) }}">
+                    {% endif %}
+
                 </a>
             </td>
             <td>

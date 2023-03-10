@@ -105,6 +105,8 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
     token = db.Column(db.String(32), index=True, unique=True)
     token_expiration = db.Column(db.DateTime)
 
+    profilePicture = db.Column(db.String(128))
+
     # Table relationship for archived posts
     archivedPostsUser = db.relationship('Post', secondary=archivedPosts, backref=db.backref('archivedPosts', lazy='dynamic'), lazy='dynamic')
 

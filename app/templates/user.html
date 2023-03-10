@@ -3,7 +3,20 @@
 {% block app_content %}
     <table class="table table-hover">
         <tr>
-            <td width="256px"><img src="{{ user.avatar(256) }}"></td>
+            
+            <td width="256px">
+    
+                <!-- Check if the profilePicture database column has text in it
+                    If it does then we use the link for the profile picture
+                    Else, we will use the function that generate the user profile picture from the email -->
+                {% if user.profilePicture %}
+                    <img style="width: 256px; height: 256px;" src="{{ user.profilePicture }}">
+                {% else %}
+                    <img src="{{ user.avatar(256) }}">
+                {% endif %}
+            
+            </td>
+
             <td>
                 <h1>{{ _('User') }}: {{ user.username }}</h1>
                 {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}

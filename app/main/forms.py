@@ -19,11 +19,13 @@ def no_spaces(form, field):
         raise validators.ValidationError('Username cannot contain a space')
 
 class EditProfileForm(FlaskForm):
-    #Added ristrictions to username length aswell.
+    #Added restrictions to username length aswell.
     username = StringField(_l('Username'), validators=[DataRequired(), no_angle_brackets, no_spaces, Length(min=0, max=100)])
-    about_me = TextAreaField(_l('About me'),
-                             validators=[Length(min=0, max=140)])
-    profilePicture = StringField(_l('Post the link below (submit as empty for default image)'))
+    about_me = TextAreaField(_l('About me'), validators=[Length(min=0, max=140)])
+    
+    # Add the stringfield so the user can input the link they want to use for a profile picture
+    profilePicture = StringField(_l('Post the link below (submit as empty for default image)'), validators=[Length(min=0, max=128)])
+    
     submit = SubmitField(_l('Submit'))
 
     def __init__(self, original_username, *args, **kwargs):

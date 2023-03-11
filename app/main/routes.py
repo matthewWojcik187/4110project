@@ -104,6 +104,10 @@ def edit_profile():
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
+        
+        # Have the currently set data for the profile picture link appear in the form
+        form.profilePicture.data = current_user.profilePicture
+
     return render_template('edit_profile.html', title=_('Edit Profile'),
                            form=form)
 

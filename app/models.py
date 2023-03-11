@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from hashlib import md5
 import json
 import os
+import onetimepass
 from time import time
 from flask import current_app, url_for
 from flask_login import UserMixin
@@ -104,9 +105,14 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     token = db.Column(db.String(32), index=True, unique=True)
     token_expiration = db.Column(db.DateTime)
+    otp_secret = db.Column(db.String(16)) # initializes the secret password
+
 
     # Table relationship for archived posts
     archivedPostsUser = db.relationship('Post', secondary=archivedPosts, backref=db.backref('archivedPosts', lazy='dynamic'), lazy='dynamic')
+
+
+    
 
     followed = db.relationship(
         'User', secondary=followers,
@@ -124,6 +130,13 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
                                     lazy='dynamic')
     tasks = db.relationship('Task', backref='user', lazy='dynamic')
 
+    # function below generates the random secret password
+    def __init__(self, **kwargs):
+        super(User, self).__init__(**kwargs)
+        if self.otp_secret is None:
+            # generate a random secret
+            self.otp_secret = base64.b32encode(os.urandom(10)).decode('utf-8') 
+
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
@@ -132,6 +145,14 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+    
+    
+    def get_totp_uri(self):
+        return 'otpauth://totp/2FA-Demo:{0}?secret={1}&issuer=2FA-Demo' \
+            .format(self.username, self.otp_secret)
+
+    def verify_totp(self, token):
+        return onetimepass.valid_totp(token, self.otp_secret)
 
     def avatar(self, size):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()

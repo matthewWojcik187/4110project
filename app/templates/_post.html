@@ -1,0 +1,54 @@
+    <table class="table table-hover">
+        <tr>
+            <td width="70px">
+                <a href="{{ url_for('main.user', username=post.author.username) }}">
+            
+                    <!-- Check if the profilePicture database column has text in it
+                    If it does then we use the link for the profile picture
+                    Else, we will use the function that generate the user profile picture from the email -->
+                    {% if post.author.profilePicture %}
+                        <img style="width: 70px; height: 70px;" src="{{ post.author.profilePicture }}">
+                    {% else %}
+                        <img src="{{ post.author.avatar(70) }}">
+                    {% endif %}
+
+                </a>
+            </td>
+            <td>
+                {% set user_link %}
+                    <span class="user_popup">
+                        <a href="{{ url_for('main.user', username=post.author.username) }}">
+                            {{ post.author.username }}
+                        </a>
+                    </span>
+                {% endset %}
+                {{ _('%(username)s said %(when)s',
+                    username=user_link, when=moment(post.timestamp).fromNow()) }}
+                <br>
+                <span id="post{{ post.id }}">{{ post.body }}</span>
+                {% if post.language and post.language != g.locale %}
+                <br><br>
+                <span id="translation{{ post.id }}">
+                    <a href="javascript:translate(
+                                '#post{{ post.id }}',
+                                '#translation{{ post.id }}',
+                                '{{ post.language }}',
+                                '{{ g.locale }}');">{{ _('Translate') }}</a>
+                </span>
+                {% endif %}
+
+                <!-- Check if a post is archived already. 
+                    If it is then we put an unarchive link,
+                    otherwise we put an archive link
+                -->
+                {% if current_user.isArchived(post.id) %}
+                    <p><a id="unarchive" href="{{ url_for('main.unarchive_post', postid=post.id) }}">
+                    {{ _('Unarchive Post') }}</a></p>
+                {% else %}
+                    <p><a id="archive" href="{{ url_for('main.archive_post', postid=post.id) }}">
+                    {{ _('Archive Post') }}</a></p>
+                {% endif %}
+
+            </td>
+        </tr>
+    </table>

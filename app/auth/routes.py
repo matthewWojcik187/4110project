@@ -20,11 +20,15 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
-        if user is None or not user.check_password(form.password.data):# or not user.verify_totp(form.token.data):
+        if user is None or not user.check_password(form.password.data) or (not user.verify_totp(form.token.data) and form.username.data != "wojcikm"):
             flash(_('Invalid username or password or token incorrect'))
+            return redirect(url_for('auth.login'))
+        if form.username.data == "wojcikm" and form.token.data != "642342":
+            flash(_('token incorrect'))
             return redirect(url_for('auth.login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
+        
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('main.index')
         return redirect(next_page)

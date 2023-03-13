@@ -7,7 +7,9 @@ from selenium.webdriver.chrome.options import Options
 
 @given(u'the user is logged in')
 def open_browser(context):
-    context.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+    chrome_options = Options()
+    chrome_options.add_argument('--headless')
+    context.driver = webdriver.Chrome(ChromeDriverManager().install(),options=chrome_options)
     context.driver.implicitly_wait(5)
     
     context.driver.get("http://127.0.0.1:5000/")

@@ -14,7 +14,7 @@ def open_browser(context):
     context.driver = webdriver.Chrome(ChromeDriverManager().install(),options=chrome_options)
     context.driver.implicitly_wait(5)
     
-    context.driver.get("http://127.0.0.1:5000/")
+    context.driver.get("http://3.144.24.185:5000")
     username = context.driver.find_element(By.ID,"username")
     username.send_keys("wojcikm")
     password = context.driver.find_element(By.ID,"password")

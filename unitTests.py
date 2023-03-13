@@ -2,8 +2,13 @@
 from datetime import datetime, timedelta
 import unittest
 from app import create_app, db
+import app
 from app.models import User, Post
+from app.main.forms import EditProfileForm
 from config import Config
+from wtforms import StringField
+from flask import current_app
+
 
 
 
@@ -220,7 +225,37 @@ class UserModelCase(unittest.TestCase):
         self.assertFalse(u2.isArchived(p3.id))
         self.assertFalse(u2.isArchived(p4.id))
 
+    def test_profilePic(self):
+        #Creating a user
+        u = User(username='john', email='john@example.com')
+        #Setting the users profile picture to a dog
+        u.profilePicture = 'dog.png'
+        db.session.add(u)
+        db.session.commit()
+        #Asserting that the avatar is not overwritten
+        self.assertEqual(u.avatar(128), ('https://www.gravatar.com/avatar/'
+                                         'd4c74594d841139328695756648b6bd6'
+                                         '?d=identicon&s=128'))
+        #Asserting the profile picture is now a dog
+        self.assertEqual(u.profilePicture, 'dog.png')
+        #Asserting the profile picture is not a cat
+        self.assertNotEqual(u.profilePicture, 'cat.jpg')
 
-    
+    def test_2fa(self):
+        #Creating a user
+        u = User(username='john', email='john@g.g')
+
+        #Generating a authenication token for the user
+        tok = u.get_totp_uri()
+        u.token = tok
+        db.session.add(u)
+        db.session.commit()
+        #Asserting that the token generated matches the one expected for the user
+        self.assertEqual(u.otp_secret, u.token[u.token.find('=')+1:u.token.find('&')])
+        #Asserting other random tokens will not satisfy the condition
+        self.assertNotEqual(u.otp_secret, '1234567890QWERTY')
+
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

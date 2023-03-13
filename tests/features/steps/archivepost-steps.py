@@ -7,11 +7,12 @@ from selenium.webdriver.chrome.options import Options
 
 @given(u'the user is logged in')
 def open_browser(context):
-    chrome_options = Options()
-    chrome_options.add_argument('--headless')
+    chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--headless')
     chrome_options.add_argument('--disable-extensions')
-    context.driver = webdriver.Chrome(ChromeDriverManager().install(),options=chrome_options)
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    context.driver = webdriver.Chrome(ChromeDriverManager().install(),chrome_options=chrome_options)
     context.driver.implicitly_wait(5)
     
     context.driver.get("http://3.144.24.185:5000")

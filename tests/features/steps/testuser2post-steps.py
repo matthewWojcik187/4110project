@@ -44,6 +44,10 @@ def step_impl(context):
 
 @then(u'blog is posted so that everyone can view it on the “Explore” page')
 def step_impl(context):
-    assert 1==1
+    context.driver.get(ip + "explore")
+    elements = context.driver.find_elements(By.TAG_NAME,"tr")
+
+    if len(elements) == 0:
+        raise NotImplementedError(u'STEP: Then the blog is posted so that everyone can view it on the “Explore” page') 
 
 

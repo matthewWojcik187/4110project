@@ -1,0 +1,12 @@
+behave tests/features/createtestuser.feature
+behave tests/features/createtestuser2.feature
+behave tests/features/userlogin.feature
+behave tests/features/testuser2post.feature
+behave tests/features/archivepost.feature
+behave tests/features/unarchivepost.feature
+behave tests/features/changeprofilepicture.feature
+behave tests/features/defaultprofilepicture.feature
+behave tests/features/following.feature
+behave tests/features/unfollow.feature
+behave tests/features/twofactorworking.feature
+behave tests/features/twofactornotworking.feature

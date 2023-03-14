@@ -7,7 +7,7 @@ from selenium.webdriver.chrome.options import Options
 
 @given(u'on the "Profile" page')
 def step_impl(context):
-    context.driver.get("http://127.0.0.1:5000/user/wojcikm")
+    context.driver.get(ip + "user/wojcikm")
 
 
 @when(u'the user clicks the “Edit your profile” button')
@@ -34,6 +34,6 @@ def step_impl(context):
 
 @then(u'the users profile picture updates')
 def step_impl(context):
-    context.driver.get("http://127.0.0.1:5000/user/wojcikm")
+    context.driver.get(ip + "user/wojcikm")
     source = context.driver.find_element(By.ID,"picture")
     assert source.get_attribute("src") == "https://preview.redd.it/myze2s70v5051.png?auto=webp&s=988c85b45884dc6ab51d81c7b1db2d06c49e8d52"

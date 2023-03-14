@@ -14,7 +14,7 @@ def step_impl(context):
 
 @then(u'the users profile picture returns to the default')
 def step_impl(context):
-    context.driver.get("http://127.0.0.1:5000/user/wojcikm")
+    context.driver.get(ip + "user/wojcikm")
     source = context.driver.find_element(By.ID,"picture")
     text = source.get_attribute("src") 
     assert text.find("https://www.gravatar.com/avatar/") != -1

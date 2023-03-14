@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from currentip import ip
 
 @given(u'enters their username,password, and incorrect two factor token')
 def step_impl(context):

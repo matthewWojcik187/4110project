@@ -4,13 +4,13 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-
+from currentip import ip
 
 @given(u'the user is on the login page')
 def step_impl(context):
     context.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
     context.driver.implicitly_wait(5)
-    context.driver.get("http://127.0.0.1:5000/")
+    context.driver.get(ip)
 
 
 @given(u'enters their username,password, two factor token')
@@ -31,4 +31,4 @@ def step_impl(context):
 
 @then(u'the user is logged in')
 def step_impl(context):
-    context.driver.get("http://127.0.0.1:5000/index")
+    context.driver.get(ip + "index")

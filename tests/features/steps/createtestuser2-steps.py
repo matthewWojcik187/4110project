@@ -4,8 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-
-ip = "http://18.218.251.148:5000/"
+from currentip import ip
 
 @given(u'the test user is on the “Register” page')
 def step_impl(context):
@@ -33,11 +32,13 @@ def step_impl(context):
 
 @then(u'the test user has now successfully created an account')
 def step_impl(context):
-    anchors = context.driver.find_elements(By.TAG_NAME, "a")
+
+    anchors = context.driver.find_elements(By.TAG_NAME, "h1")
     stringtest = ""
 
     for element in anchors:
-        if element.text == "Login":
+        if element.text == "Two Factor Authentication":
             stringtest = element.text
+            break
     
-    assert stringtest == "Login"
+    assert stringtest == "Two Factor Authentication"

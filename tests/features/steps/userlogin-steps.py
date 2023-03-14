@@ -4,7 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-#from ip.py import ip
+from currentip import ip
 
 @given(u'the user is on the “Sign in” page')
 def step_impl(context):

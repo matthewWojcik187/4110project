@@ -4,11 +4,11 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-
+from currentip import ip
 
 @given(u'clicks on a followed user')
 def step_impl(context):
-    context.driver.get("http://127.0.0.1:5000/index")
+    context.driver.get(ip + "index")
     anchors = context.driver.find_elements(By.TAG_NAME, "a")
 
     for element in anchors:

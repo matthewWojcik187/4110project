@@ -245,7 +245,7 @@ class UserModelCase(unittest.TestCase):
         #Creating a user
         u = User(username='john', email='john@g.g')
 
-        #Generating a authenication token for the user
+        #Generating a authentication token for the user
         tok = u.get_totp_uri()
         u.token = tok
         db.session.add(u)

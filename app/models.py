@@ -187,7 +187,7 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
         posted=Post.getPost(int(postid))
         return self.archivedPostsUser.filter(archivedPosts.c.postId == posted.id).count() > 0
 
-
+    # Check if a post is followed
     def followed_posts(self):
         followed = Post.query.join(
             followers, (followers.c.followed_id == Post.user_id)).filter(

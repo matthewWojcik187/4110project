@@ -11,12 +11,12 @@ from app.models import User
 #Added a validator to not allow special chars for HTML injection
 def no_angle_brackets(form, field):
     if '<' in field.data or '>' in field.data:
-        raise validators.ValidationError('Username cannot contain "<" or ">" characters')
+        raise validators.ValidationError('Username can not contain "<" or ">" characters')
 
 #Added a validator to not allow spaces to make usernames more uniform
 def no_spaces(form, field):
     if ' ' in field.data:
-        raise validators.ValidationError('Username cannot contain a space')
+        raise validators.ValidationError('Username can not contain a space')
 
 class EditProfileForm(FlaskForm):
     #Added restrictions to username length aswell.

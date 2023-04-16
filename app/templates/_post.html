@@ -7,9 +7,9 @@
                     If it does then we use the link for the profile picture
                     Else, we will use the function that generate the user profile picture from the email -->
                     {% if post.author.profilePicture %}
-                        <img style="width: 70px; height: 70px;" src="{{ post.author.profilePicture }}">
+                        <img style="width: 70px; height: 70px;" src="{{ post.author.profilePicture }}" alt="Profile Picture">
                     {% else %}
-                        <img src="{{ post.author.avatar(70) }}">
+                        <img src="{{ post.author.avatar(70) }}" alt="Profile Picture">
                     {% endif %}
 
                 </a>

@@ -10,9 +10,9 @@
                     If it does then we use the link for the profile picture
                     Else, we will use the function that generate the user profile picture from the email -->
                 {% if user.profilePicture %}
-                    <img id="picture" style="width: 256px; height: 256px;" src="{{ user.profilePicture }}">
+                    <img id="picture" style="width: 256px; height: 256px;" src="{{ user.profilePicture }}" alt="Profile Picture">
                 {% else %}
-                    <img id="picture" src="{{ user.avatar(256) }}">
+                    <img id="picture" src="{{ user.avatar(256) }}" alt="Profile Picture">
                 {% endif %}
             
             </td>

@@ -95,6 +95,7 @@ archivedPosts = db.Table(
     db.Column('postId', db.Integer, db.ForeignKey('post.id'))
 )
 
+
 class User(UserMixin, PaginatedAPIMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
@@ -105,16 +106,13 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     token = db.Column(db.String(32), index=True, unique=True)
     token_expiration = db.Column(db.DateTime)
-    otp_secret = db.Column(db.String(16)) # initializes the secret password
-
+    otp_secret = db.Column(db.String(16))  # initializes the secret password
 
     profilePicture = db.Column(db.String(128))
 
     # Table relationship for archived posts
-    archivedPostsUser = db.relationship('Post', secondary=archivedPosts, backref=db.backref('archivedPosts', lazy='dynamic'), lazy='dynamic')
-
-
-    
+    archivedPostsUser = db.relationship('Post', secondary=archivedPosts,
+                                        backref=db.backref('archivedPosts', lazy='dynamic'), lazy='dynamic')
 
     followed = db.relationship(
         'User', secondary=followers,
@@ -137,7 +135,7 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
         super(User, self).__init__(**kwargs)
         if self.otp_secret is None:
             # generate a random secret
-            self.otp_secret = base64.b32encode(os.urandom(10)).decode('utf-8') 
+            self.otp_secret = base64.b32encode(os.urandom(10)).decode('utf-8')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -147,8 +145,7 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-    
-    
+
     def get_totp_uri(self):
         return 'otpauth://totp/2FA-Demo:{0}?secret={1}&issuer=2FA-Demo' \
             .format(self.username, self.otp_secret)
@@ -173,7 +170,6 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
         return self.followed.filter(
             followers.c.followed_id == user.id).count() > 0
 
-
     # Archive post
     def archive(self, post):
         self.archivedPostsUser.append(post)
@@ -184,14 +180,13 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
 
     # Check if a post is archived
     def isArchived(self, postid):
-        posted=Post.getPost(int(postid))
+        posted = Post.getPost(int(postid))
         return self.archivedPostsUser.filter(archivedPosts.c.postId == posted.id).count() > 0
-
 
     def followed_posts(self):
         followed = Post.query.join(
             followers, (followers.c.followed_id == Post.user_id)).filter(
-                followers.c.follower_id == self.id)
+            followers.c.follower_id == self.id)
         own = Post.query.filter_by(user_id=self.id)
         return followed.union(own).order_by(Post.timestamp.desc())
 
@@ -297,7 +292,7 @@ class Post(SearchableMixin, db.Model):
 
     def __repr__(self):
         return '<Post {}>'.format(self.body)
-    
+
     def getPost(postid):
 
         items = Post.query.all()

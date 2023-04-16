@@ -8,6 +8,7 @@ from app.main.forms import EditProfileForm
 from config import Config
 from wtforms import StringField
 from flask import current_app
+import graph
 
 
 

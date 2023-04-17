@@ -263,3 +263,25 @@ def archived_posts():
     allarchivedposts = current_user.archivedPostsUser
 
     return render_template('archived.html', archived=allarchivedposts, next_url=None, prev_url=None)
+
+# Function to like a post
+@bp.route('/likepost/<postid>')
+@login_required
+def like_post(postid):
+
+    postToIncrease = Post.getPost(int(postid))
+    updatedLikeCount = Post.increaseLikeCount(postToIncrease)
+    db.session.commit()
+
+    return redirect(request.referrer)
+
+# Function to dislike post
+@bp.route('/dislike/<postid>')
+@login_required
+def dislike_post(postid):
+
+    postToDecrease = Post.getPost(int(postid))
+    updatedLikeCount = Post.decreaseLikeCount(postToDecrease)
+    db.session.commit()
+
+    return redirect(request.referrer)

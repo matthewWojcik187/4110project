@@ -106,15 +106,10 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
     token = db.Column(db.String(32), index=True, unique=True)
     token_expiration = db.Column(db.DateTime)
     otp_secret = db.Column(db.String(16)) # initializes the secret password
-
-
     profilePicture = db.Column(db.String(128))
 
     # Table relationship for archived posts
     archivedPostsUser = db.relationship('Post', secondary=archivedPosts, backref=db.backref('archivedPosts', lazy='dynamic'), lazy='dynamic')
-
-
-    
 
     followed = db.relationship(
         'User', secondary=followers,
@@ -186,7 +181,6 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
     def isArchived(self, postid):
         posted=Post.getPost(int(postid))
         return self.archivedPostsUser.filter(archivedPosts.c.postId == posted.id).count() > 0
-
 
     def followed_posts(self):
         followed = Post.query.join(
@@ -294,6 +288,7 @@ class Post(SearchableMixin, db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     language = db.Column(db.String(5))
+    likeCount = db.Column(db.Integer)
 
     def __repr__(self):
         return '<Post {}>'.format(self.body)
@@ -307,6 +302,24 @@ class Post(SearchableMixin, db.Model):
                 return item
 
         return False
+
+    def increaseLikeCount(post):
+
+        if post.likeCount == None:
+            post.likeCount = 1
+        else:
+            post.likeCount = post.likeCount + 1
+
+        return post.likeCount
+
+    def decreaseLikeCount(post):
+
+        if post.likeCount == None:
+            post.likeCount = -1
+        else:
+            post.likeCount = post.likeCount -1
+
+        return post.likeCount
 
 
 class Message(db.Model):

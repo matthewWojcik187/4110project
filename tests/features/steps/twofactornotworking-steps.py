@@ -13,7 +13,7 @@ def step_impl(context):
     password = context.driver.find_element(By.ID,"password")
     password.send_keys("wojcikm")
     token = context.driver.find_element(By.ID,"token")
-    token.send_keys("123456")
+    token.send_keys("888888")
 
 
 @then(u'the user is not logged in')

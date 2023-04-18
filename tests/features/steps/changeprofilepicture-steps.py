@@ -23,7 +23,7 @@ def step_impl(context):
 def step_impl(context):
     photo = context.driver.find_element(By.ID,"profilePicture")
     photo.clear()
-    photo.send_keys("https://preview.redd.it/myze2s70v5051.png?auto=webp&s=988c85b45884dc6ab51d81c7b1db2d06c49e8d52")
+    photo.send_keys("https://i.ibb.co/j64J9MX/flowers.jpg")
     context.driver.implicitly_wait(100)
 
 
@@ -37,4 +37,4 @@ def step_impl(context):
 def step_impl(context):
     context.driver.get(ip + "user/wojcikm")
     source = context.driver.find_element(By.ID,"picture")
-    assert source.get_attribute("src") == "https://preview.redd.it/myze2s70v5051.png?auto=webp&s=988c85b45884dc6ab51d81c7b1db2d06c49e8d52"
+    assert source.get_attribute("src") == "https://i.ibb.co/j64J9MX/flowers.jpg"

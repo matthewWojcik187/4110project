@@ -4,6 +4,6 @@
 {% block app_content %}
     <h1>Two Factor Authentication</h1>
     <p>Please start FreeOTP on your smartphone and scan the following QR Code with it:</p>
-    <p><img id="qrcode" src="{{ url_for('auth.qrcode') }}"></p>
+    <p><img id="qrcode" src="{{ url_for('auth.qrcode') }}" alt="QR Code"></p>
     <p>This will take you to the <a href="{{ url_for('auth.login') }}">Login</a> page!</p>
 {% endblock %}

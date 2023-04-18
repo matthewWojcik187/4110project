@@ -2,5 +2,5 @@ projectKey=microblog
 serverUrl=http://localhost:9000
 serverVersion=10.0.0.68432
 dashboardUrl=http://localhost:9000/dashboard?id=microblog
-ceTaskId=AYd4TVg0d9kbkdNvU2PO
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYd4TVg0d9kbkdNvU2PO
+ceTaskId=AYeVWdFr7QuWUYfcMdg_
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYeVWdFr7QuWUYfcMdg_

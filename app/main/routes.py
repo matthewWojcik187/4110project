@@ -11,6 +11,8 @@ from app.models import User, Post, Message, Notification
 from app.translate import translate
 from app.main import bp
 
+
+# route to ensure user is authenticated
 @bp.before_app_request
 def before_request():
     if current_user.is_authenticated:
@@ -20,6 +22,7 @@ def before_request():
     g.locale = str(get_locale())
 
 
+# route for the home page
 @bp.route('/', methods=['GET', 'POST'])
 @bp.route('/index', methods=['GET', 'POST'])
 @login_required
@@ -49,6 +52,7 @@ def index():
                            prev_url=prev_url)
 
 
+# route for the explore page
 @bp.route('/explore')
 @login_required
 def explore():
@@ -65,6 +69,7 @@ def explore():
                            prev_url=prev_url)
 
 
+# route for the user page
 @bp.route('/user/<username>')
 @login_required
 def user(username):
@@ -82,6 +87,7 @@ def user(username):
                            next_url=next_url, prev_url=prev_url, form=form)
 
 
+# route for the username to popup
 @bp.route('/user/<username>/popup')
 @login_required
 def user_popup(username):
@@ -90,6 +96,7 @@ def user_popup(username):
     return render_template('user_popup.html', user=user, form=form)
 
 
+# route for the profile editing
 @bp.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
@@ -104,7 +111,7 @@ def edit_profile():
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
-        
+
         # Have the currently set data for the profile picture link appear in the form
         form.profilePicture.data = current_user.profilePicture
 
@@ -112,6 +119,7 @@ def edit_profile():
                            form=form)
 
 
+# route for the followers
 @bp.route('/follow/<username>', methods=['POST'])
 @login_required
 def follow(username):
@@ -132,6 +140,7 @@ def follow(username):
         return redirect(url_for('main.index'))
 
 
+# route for unfollowing a user
 @bp.route('/unfollow/<username>', methods=['POST'])
 @login_required
 def unfollow(username):
@@ -152,6 +161,7 @@ def unfollow(username):
         return redirect(url_for('main.index'))
 
 
+# route for translating a text
 @bp.route('/translate', methods=['POST'])
 @login_required
 def translate_text():
@@ -160,6 +170,7 @@ def translate_text():
                                       request.form['dest_language'])})
 
 
+# route to perform a search
 @bp.route('/search')
 @login_required
 def search():
@@ -176,6 +187,7 @@ def search():
                            next_url=next_url, prev_url=prev_url)
 
 
+# route for sending messages to other user
 @bp.route('/send_message/<recipient>', methods=['GET', 'POST'])
 @login_required
 def send_message(recipient):
@@ -193,6 +205,7 @@ def send_message(recipient):
                            form=form, recipient=recipient)
 
 
+# route for messages page
 @bp.route('/messages')
 @login_required
 def messages():
@@ -202,8 +215,8 @@ def messages():
     page = request.args.get('page', 1, type=int)
     messages = current_user.messages_received.order_by(
         Message.timestamp.desc()).paginate(
-            page=page, per_page=current_app.config['POSTS_PER_PAGE'],
-            error_out=False)
+        page=page, per_page=current_app.config['POSTS_PER_PAGE'],
+        error_out=False)
     next_url = url_for('main.messages', page=messages.next_num) \
         if messages.has_next else None
     prev_url = url_for('main.messages', page=messages.prev_num) \
@@ -212,6 +225,7 @@ def messages():
                            next_url=next_url, prev_url=prev_url)
 
 
+# route to export posts
 @bp.route('/export_posts')
 @login_required
 def export_posts():
@@ -223,6 +237,7 @@ def export_posts():
     return redirect(url_for('main.user', username=current_user.username))
 
 
+# route for notifications
 @bp.route('/notifications')
 @login_required
 def notifications():
@@ -235,51 +250,51 @@ def notifications():
         'timestamp': n.timestamp
     } for n in notifications])
 
+
 # Used to archive a post for a user
 @bp.route('/archive/<postid>')
 @login_required
 def archive_post(postid):
-
     current_user.archive(Post.getPost(int(postid)))
     db.session.commit()
 
     return redirect(request.referrer)
 
+
 # Used to remove an archived post for a user
 @bp.route('/unarchive/<postid>')
 @login_required
 def unarchive_post(postid):
-
     current_user.unarchive(Post.getPost(int(postid)))
     db.session.commit()
 
     return redirect(request.referrer)
 
+
 # Function for when the user visits the archived posts page
 @bp.route('/archivedposts')
 @login_required
 def archived_posts():
-    
     allarchivedposts = current_user.archivedPostsUser
 
     return render_template('archived.html', archived=allarchivedposts, next_url=None, prev_url=None)
+
 
 # Function to like a post
 @bp.route('/likepost/<postid>')
 @login_required
 def like_post(postid):
-
     postToIncrease = Post.getPost(int(postid))
     updatedLikeCount = Post.increaseLikeCount(postToIncrease)
     db.session.commit()
 
     return redirect(request.referrer)
 
+
 # Function to dislike post
 @bp.route('/dislike/<postid>')
 @login_required
 def dislike_post(postid):
-
     postToDecrease = Post.getPost(int(postid))
     updatedLikeCount = Post.decreaseLikeCount(postToDecrease)
     db.session.commit()

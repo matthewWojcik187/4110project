@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, flash, request, session, \
-abort
+    abort
 from werkzeug.urls import url_parse
 from flask_login import login_user, logout_user, current_user
 from flask_babel import _
@@ -21,7 +21,9 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if form.token.data != "123456":
-            if user is None or not user.check_password(form.password.data) or (not user.verify_totp(form.token.data) and (form.username.data != "wojcikm" and form.username.data != "testuser2")):
+            if user is None or not user.check_password(form.password.data) or (
+                    not user.verify_totp(form.token.data) and (
+                    form.username.data != "wojcikm" and form.username.data != "testuser2")):
                 flash(_('Invalid username or password or token incorrect'))
                 return redirect(url_for('auth.login'))
             if ((form.username.data == "wojcikm" or form.username.data == "testuser2") and form.token.data != "642342"):
@@ -29,7 +31,7 @@ def login():
                 return redirect(url_for('auth.login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
-        
+
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('main.index')
         return redirect(next_page)
@@ -57,6 +59,8 @@ def register():
     return render_template('auth/register.html', title=_('Register'),
                            form=form)
 
+
+# route for the two factor setup
 @bp.route('/twofactor')
 def two_factor_setup():
     if 'username' not in session:
@@ -72,6 +76,7 @@ def two_factor_setup():
         'Expires': '0'}
 
 
+# route for the qr code
 @bp.route('/qrcode')
 def qrcode():
     if 'username' not in session:
